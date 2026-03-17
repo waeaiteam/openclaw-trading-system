@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.pytest_cache/
+
+# Env / secrets
+.env
+.env.*
+*.pem
+*.key
+*.secret
+
+# Runtime data / logs
+data/
+logs/
+tmp/
+*.log
+*.pid
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
