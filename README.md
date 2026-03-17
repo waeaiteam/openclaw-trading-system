@@ -1,33 +1,43 @@
-# OpenClaw Trading System
+# OpenClaw OKX Trading System (Pure)
 
-一个可独立部署的交易系统项目封装，核心包含：
-- `coevo_dashboard.py`：多实例监控与交易面板（OKX/主 Agent/社媒等）
-- `site_platform_ai_monitor.py`：站点状态快照与 AI 分析脚本
+纯交易系统仓库，只包含 OKX 交易引擎与因子模块，不包含 xhs/main/world/airdrop 等其他实例代码。
+
+## 包含内容
+
+- `src/ai_trader_v3.py`：基础交易引擎
+- `src/ai_trader_v3_1.py`：主策略引擎（建议生产使用）
+- `src/orderbook_tracker.py`：订单簿追踪
+- `src/liquidation_heatmap_factor.py`：清算热力图因子
+- `src/stock_market_pro_factors.py`：跨市场因子（可选增强）
 
 ## 项目结构
 
 ```text
 openclaw-trading-system/
   src/
-    coevo_dashboard.py
-    site_platform_ai_monitor.py
+    ai_trader_v3.py
+    ai_trader_v3_1.py
+    daily_trade.py
+    orderbook_tracker.py
+    liquidation_heatmap_factor.py
+    stock_market_pro_factors.py
   config/
     .env.example
   deploy/systemd/
-    coevo-dashboard.service
-    site-ai-monitor.service
+    okx-trader.service
+    README.md
   scripts/
-    start_dashboard.sh
-    run_site_ai_monitor.sh
+    start_trader.sh
+    run_once.sh
     smoke_test.sh
   requirements.txt
 ```
 
-## 环境要求
+## 运行环境
 
 - Python 3.10+
-- Linux（建议 Ubuntu + systemd）
-- 网络可访问 OKX/OpenAI/子实例接口
+- Linux (systemd)
+- 网络可访问 OKX API
 
 安装依赖：
 
@@ -35,43 +45,37 @@ openclaw-trading-system/
 pip install -r requirements.txt
 ```
 
-## 快速启动
+## 快速运行
+
+一次决策测试：
 
 ```bash
-cd src
-python3 coevo_dashboard.py
+bash scripts/run_once.sh
 ```
 
-默认监听 `127.0.0.1:18091`。
+持续运行：
 
-## 配置说明
+```bash
+bash scripts/start_trader.sh
+```
 
-脚本内部当前使用固定路径（如 `/root/.okx-paper`、`/root/.openclaw`）。  
-生产部署时建议：
-- 保持与现网一致目录
-- 或在二次改造时统一改为环境变量配置
+## 关键路径约定
+
+当前代码按 VPS 生产路径设计：
+- 运行目录：`/root/.okx-paper`
+- 状态文件：`/root/.okx-paper/ai_trader_status.json`
+- 数据目录：`/root/.okx-paper/data`
 
 ## systemd 部署
 
-1. 复制项目到服务器，例如：`/root/openclaw-trading-system`
-2. 根据实际路径修改 `deploy/systemd/*.service`
-3. 安装并启动：
-
 ```bash
-sudo cp deploy/systemd/coevo-dashboard.service /etc/systemd/system/
+sudo cp deploy/systemd/okx-trader.service /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl enable --now coevo-dashboard.service
-sudo systemctl status coevo-dashboard.service
+sudo systemctl enable --now okx-trader.service
+sudo systemctl status okx-trader.service
 ```
 
-## 健康检查
+## 安全说明
 
-```bash
-bash scripts/smoke_test.sh
-```
-
-## 安全建议
-
-- 不要把 API Key、私钥、密码提交到仓库
-- 使用 `.env` 或系统密钥管理器保存敏感配置
-- 当前仓库已通过 `.gitignore` 屏蔽常见敏感文件
+- 不要提交任何密钥、账户配置、真实交易凭据
+- `.gitignore` 已排除日志和常见敏感文件

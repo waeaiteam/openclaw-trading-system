@@ -1,31 +1,28 @@
-# systemd 部署说明
+# systemd 部署说明（纯交易系统）
 
 ## 1) 复制服务文件
 
 ```bash
-sudo cp coevo-dashboard.service /etc/systemd/system/
-sudo cp site-ai-monitor.service /etc/systemd/system/
+sudo cp okx-trader.service /etc/systemd/system/
 ```
 
-## 2) 按实际路径修改
+## 2) 检查路径
 
-默认路径是：
-- `/root/openclaw-trading-system/src/coevo_dashboard.py`
-- `/root/openclaw-trading-system/src/site_platform_ai_monitor.py`
+默认路径：
+- `/root/openclaw-trading-system/src/ai_trader_v3_1.py`
 
-如果你部署路径不同，先编辑 service 文件中的 `WorkingDirectory` 和 `ExecStart`。
+如果实际路径不同，请先修改 service 文件中的 `WorkingDirectory` 与 `ExecStart`。
 
-## 3) 启动 Dashboard
+## 3) 启动服务
 
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl enable --now coevo-dashboard.service
-sudo systemctl status coevo-dashboard.service
+sudo systemctl enable --now okx-trader.service
+sudo systemctl status okx-trader.service
 ```
 
-## 4) 手动触发一次 AI Monitor
+## 4) 查看日志
 
 ```bash
-sudo systemctl start site-ai-monitor.service
-sudo systemctl status site-ai-monitor.service
+journalctl -u okx-trader.service -f
 ```

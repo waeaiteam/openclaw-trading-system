@@ -1,5 +1,5 @@
 [Unit]
-Description=OpenClaw Coevo Dashboard
+Description=OpenClaw OKX Trader v3.1
 After=network-online.target
 Wants=network-online.target
 
@@ -8,9 +8,9 @@ Type=simple
 User=root
 WorkingDirectory=/root/openclaw-trading-system/src
 EnvironmentFile=-/root/openclaw-trading-system/.env
-ExecStart=/usr/bin/python3 /root/openclaw-trading-system/src/coevo_dashboard.py
+ExecStart=/usr/bin/python3 /root/openclaw-trading-system/src/ai_trader_v3_1.py --interval 60
 Restart=always
-RestartSec=3
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
